@@ -226,6 +226,24 @@ std::string GetFontFamily(const std::string& filepath)
   return GetFontFamily(buffer);
 }
 
+bool ValidateFont(std::span<const uint8_t> buffer)
+{
+  FT_Library library{nullptr};
+  FT_Init_FreeType(&library);
+  if (!library)
+  {
+    CLog::LogF(LOGERROR, "Unable to initialize freetype library");
+    return false;
+  }
+
+  FT_Face face{nullptr};
+  const bool valid = FT_New_Memory_Face(library, reinterpret_cast<const FT_Byte*>(buffer.data()),
+                                        static_cast<FT_Long>(buffer.size()), 0, &face) == 0;
+  FT_Done_Face(face);
+  FT_Done_FreeType(library);
+  return valid;
+}
+
 bool IsSupportedFontExtension(const std::string& filepath)
 {
   return URIUtils::HasExtension(filepath, SUPPORTED_EXTENSIONS_MASK);

@@ -2366,8 +2366,11 @@ CDemuxStream* CDVDDemuxFFmpeg::AddStream(int streamIdx)
         AVDictionaryEntry* attachmentMimetype =
             av_dict_get(pStream->metadata, "mimetype", nullptr, 0);
 
-        if (pStream->codecpar->codec_id == AV_CODEC_ID_TTF ||
-            pStream->codecpar->codec_id == AV_CODEC_ID_OTF || AttachmentIsFont(attachmentMimetype))
+        if ((pStream->codecpar->codec_id == AV_CODEC_ID_TTF ||
+             pStream->codecpar->codec_id == AV_CODEC_ID_OTF ||
+             AttachmentIsFont(attachmentMimetype)) &&
+            FONT::ValidateFont({pStream->codecpar->extradata,
+                                static_cast<size_t>(pStream->codecpar->extradata_size)}))
         {
           // Temporary fonts are extracted to the temporary fonts path
           //! @todo: temporary font file management should be completely

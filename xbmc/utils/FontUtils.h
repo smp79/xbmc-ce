@@ -9,6 +9,7 @@
 #pragma once
 
 #include <set>
+#include <span>
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -71,6 +72,13 @@ std::string GetFontFamily(std::vector<uint8_t>& buffer);
  *  \return The font family name, otherwise empty if fails
  */
 std::string GetFontFamily(const std::string& filepath);
+
+/*!
+ *  \brief Check if the data can be loaded as a font
+ *  \param buffer The font data
+ *  \return True if the first font face can be loaded, otherwise false
+ */
+bool ValidateFont(std::span<const uint8_t> buffer);
 
 /*!
  *  \brief Check if a filename have a supported font extension.
